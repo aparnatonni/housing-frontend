@@ -78,11 +78,20 @@ export function getStoredTokens(): { accessToken: string | null; refreshToken: s
 
 /** True once the persisted auth store has been rehydrated on the client. */
 export function useHasHydrated(): boolean {
-  const [hydrated, setHydrated] = useState(() => useAuthStore.persist.hasHydrated());
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = useAuthStore.persist.onFinishHydration(() => setHydrated(true));
-    setHydrated(useAuthStore.persist.hasHydrated());
+    const persist = useAuthStore.persist;
+    if (!persist) return;
+    const unsubscribe = persist.onFinishHydration(() => setHydrated(true));
+    if (persist.hasHydrated()) {
+      // Already rehydrated before this effect ran — sync after the first paint.
+      const frame = requestAnimationFrame(() => setHydrated(true));
+      return () => {
+        cancelAnimationFrame(frame);
+        unsubscribe();
+      };
+    }
     return unsubscribe;
   }, []);
 
