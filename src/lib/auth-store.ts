@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { User } from "@/lib/types";
@@ -73,4 +74,17 @@ export function getStoredTokens(): { accessToken: string | null; refreshToken: s
   } catch {
     return { accessToken: null, refreshToken: null };
   }
+}
+
+/** True once the persisted auth store has been rehydrated on the client. */
+export function useHasHydrated(): boolean {
+  const [hydrated, setHydrated] = useState(() => useAuthStore.persist.hasHydrated());
+
+  useEffect(() => {
+    const unsubscribe = useAuthStore.persist.onFinishHydration(() => setHydrated(true));
+    setHydrated(useAuthStore.persist.hasHydrated());
+    return unsubscribe;
+  }, []);
+
+  return hydrated;
 }
