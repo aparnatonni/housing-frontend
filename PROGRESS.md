@@ -6,12 +6,12 @@ Re-read AGENTS.md + this file + API_NOTES.md after any restart, continue at firs
 - [x] Git init: config, main branch, remote, initial commit, push
 - [x] Probe live API + Postman collection, write API_NOTES.md
 - [x] BLOCKERS.md created
-- [ ] Task 0: shadcn init + components + deps + .env.example
+- [x] Task 0: shadcn init + components + deps + .env.example
 
 ## Tasks
-- [ ] Task 1: Foundation — typed API client, types, providers, reusable components, hooks
-- [ ] Task 2: Auth — login/register, demo buttons, Zustand store, middleware, logout
-- [ ] Task 3: Shared layouts — Navbar/Footer, role sidebars, error/not-found/loading files
+- [x] Task 1: Foundation — typed API client, types, providers, reusable components, hooks
+- [x] Task 2: Auth — login/register, demo buttons, Zustand store, middleware, logout
+- [x] Task 3: Shared layouts — Navbar/Footer, role sidebars, error/not-found/loading files
 - [ ] Task 4: Public pages (Metadata): Home, About, Services, Contact, Pricing/FAQ
 - [ ] Task 5: Listings browse + detail (URL-driven filters/sort/pagination)
 - [ ] Task 6: Tenant dashboard: /dashboard, /dashboard/profile, /dashboard/payments

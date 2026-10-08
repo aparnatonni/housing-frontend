@@ -20,3 +20,8 @@
 - The backend has no favourites, no roommate-matching module. Task 10 mentions optimistic
   favorite updates — implemented on the mutations that do exist (approve/reject, status
   changes, apply/viewing requests) instead.
+
+## 4. No contact endpoint
+- The API has no `/contact` (or similar) endpoint. The Contact page form is fully validated
+  (RHF + Zod) and hands the message to the visitor's mail client (mailto with pre-filled
+  subject/body) instead of faking a submission. See `src/components/contact/contact-form.tsx`.

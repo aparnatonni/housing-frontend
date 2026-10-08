@@ -2,6 +2,9 @@ import Link from "next/link";
 import { Home } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
+/** Evaluated once at build time so static prerendering stays deterministic. */
+const YEAR = new Date().getFullYear();
+
 const COLUMNS = [
   {
     title: "Explore",
@@ -76,7 +79,7 @@ export function Footer() {
         </div>
         <Separator className="my-8" />
         <div className="flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} NestMate. All rights reserved.</p>
+          <p>© {YEAR} NestMate. All rights reserved.</p>
           <p>Built with Next.js, powered by the NestMate API.</p>
         </div>
       </div>
