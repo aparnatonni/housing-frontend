@@ -15,7 +15,7 @@ Re-read AGENTS.md + this file + API_NOTES.md after any restart, continue at firs
 - [x] Task 4: Public pages (Metadata): Home, About, Services, Contact, Pricing/FAQ
 - [x] Task 5: Listings browse + detail (URL-driven filters/sort/pagination)
 - [x] Task 6: Tenant dashboard: /dashboard, /dashboard/profile, /dashboard/payments
-- [ ] Task 7: Landlord dashboard: /provider (listings+requests), Post wizard, earnings, profile
+- [x] Task 7: Landlord dashboard: /provider (listings+requests), Post wizard, earnings, profile
 - [ ] Task 8: Admin dashboard: /admin stats+charts, /admin/manage CRUD, /admin/reports
 - [ ] Task 9: Payments (SSLCommerz): initiate, /payment/success, /payment/cancel
 - [ ] Task 10: Optimistic updates, toasts, error.tsx per route group

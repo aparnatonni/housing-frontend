@@ -9,7 +9,6 @@ import { toast } from "sonner";
 import { Camera, Save } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -36,33 +35,10 @@ const profileSchema = z.object({
 
 type ProfileValues = z.infer<typeof profileSchema>;
 
-const money = z
-  .string()
-  .refine(
-    (value) => value.trim() === "" || (!Number.isNaN(Number(value)) && Number(value) >= 0),
-    "Enter a valid budget"
-  );
-
-const roommateSchema = z.object({
-  minBudget: money.optional(),
-  maxBudget: money.optional(),
-  preferredCity: z.string().trim().optional().or(z.literal("")),
-  genderPreference: z.enum(["ANY", "MALE", "FEMALE", "OTHER"]).optional(),
-  lifestyleTags: z.string().trim().optional().or(z.literal("")),
-  isSmoker: z.boolean().optional(),
-  hasPets: z.boolean().optional(),
-  moveInDate: z.string().optional().or(z.literal("")),
-});
-
-type RoommateValues = z.infer<typeof roommateSchema>;
-
 const passwordSchema = z
   .object({
     currentPassword: z.string().min(1, "Enter your current password"),
-    newPassword: z
-      .string()
-      .min(8, "New password must be at least 8 characters")
-      .regex(/[A-Za-z]/, "New password must include a letter"),
+    newPassword: z.string().min(8, "New password must be at least 8 characters"),
     confirmPassword: z.string().min(1, "Confirm your new password"),
   })
   .refine((values) => values.newPassword === values.confirmPassword, {
@@ -72,7 +48,7 @@ const passwordSchema = z
 
 type PasswordValues = z.infer<typeof passwordSchema>;
 
-export function ProfileForm() {
+export function ProviderProfile() {
   const queryClient = useQueryClient();
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
@@ -93,26 +69,12 @@ export function ProfileForm() {
     },
   });
 
-  const roommateForm = useForm<RoommateValues>({
-    resolver: zodResolver(roommateSchema),
-    defaultValues: {
-      minBudget: "",
-      maxBudget: "",
-      preferredCity: "",
-      genderPreference: "ANY",
-      lifestyleTags: "",
-      isSmoker: false,
-      hasPets: false,
-      moveInDate: "",
-    },
-  });
-
   const passwordForm = useForm<PasswordValues>({
     resolver: zodResolver(passwordSchema),
     defaultValues: { currentPassword: "", newPassword: "", confirmPassword: "" },
   });
 
-  const onProfileSubmit = async (values: ProfileValues) => {
+  const onSubmit = async (values: ProfileValues) => {
     try {
       const updated = await api.patch<User>("/users/me", {
         name: values.name,
@@ -124,28 +86,6 @@ export function ProfileForm() {
       toast.success("Profile updated");
     } catch (error) {
       toast.error(error instanceof ApiError ? error.message : "Could not update profile");
-    }
-  };
-
-  const onRoommateSubmit = async (values: RoommateValues) => {
-    try {
-      await api.patch<User>("/users/me", {
-        roommatePreference: {
-          minBudget: values.minBudget ? Number(values.minBudget) : undefined,
-          maxBudget: values.maxBudget ? Number(values.maxBudget) : undefined,
-          preferredCity: values.preferredCity || undefined,
-          genderPreference: values.genderPreference,
-          lifestyleTags: values.lifestyleTags
-            ? values.lifestyleTags.split(",").map((tag) => tag.trim()).filter(Boolean)
-            : undefined,
-          isSmoker: values.isSmoker ?? false,
-          hasPets: values.hasPets ?? false,
-          moveInDate: values.moveInDate ? new Date(values.moveInDate).toISOString() : undefined,
-        },
-      });
-      toast.success("Roommate preferences saved");
-    } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : "Could not save preferences");
     }
   };
 
@@ -193,7 +133,6 @@ export function ProfileForm() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-3">
-      {/* Avatar card */}
       <Card>
         <CardHeader>
           <CardTitle>Profile photo</CardTitle>
@@ -217,19 +156,18 @@ export function ProfileForm() {
             </span>
           </label>
           <p className="text-center text-xs text-muted-foreground">
-            JPG or PNG, up to 5 MB. The photo is stored with your profile.
+            Tenants see your photo on their application updates.
           </p>
         </CardContent>
       </Card>
 
-      {/* Basic info */}
       <Card className="lg:col-span-2">
         <CardHeader>
-          <CardTitle>Basic information</CardTitle>
+          <CardTitle>Public profile</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onProfileSubmit)} className="space-y-4" noValidate>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
               <div className="grid gap-4 sm:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -249,7 +187,7 @@ export function ProfileForm() {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone</FormLabel>
+                      <FormLabel>Contact phone</FormLabel>
                       <FormControl>
                         <Input placeholder="+1-555-0100" disabled={isPending} {...field} />
                       </FormControl>
@@ -263,16 +201,16 @@ export function ProfileForm() {
                 name="bio"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Bio</FormLabel>
+                    <FormLabel>About you</FormLabel>
                     <FormControl>
                       <Textarea
-                        rows={3}
-                        placeholder="Tell landlords a bit about yourself…"
+                        rows={4}
+                        placeholder="Tell tenants who manages the property and how you work…"
                         disabled={isPending}
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>Shown to landlords when you apply.</FormDescription>
+                    <FormDescription>Shown on every listing you publish.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -285,148 +223,6 @@ export function ProfileForm() {
         </CardContent>
       </Card>
 
-      {/* Roommate preferences */}
-      <Card className="lg:col-span-3">
-        <CardHeader>
-          <CardTitle>Roommate preferences</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...roommateForm}>
-            <form
-              onSubmit={roommateForm.handleSubmit(onRoommateSubmit)}
-              className="space-y-4"
-              noValidate
-            >
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <FormField
-                  control={roommateForm.control}
-                  name="minBudget"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Min budget ($/mo)</FormLabel>
-                      <FormControl>
-                        <Input type="number" min={0} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={roommateForm.control}
-                  name="maxBudget"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Max budget ($/mo)</FormLabel>
-                      <FormControl>
-                        <Input type="number" min={0} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={roommateForm.control}
-                  name="preferredCity"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Preferred city</FormLabel>
-                      <FormControl>
-                        <Input placeholder="New York" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={roommateForm.control}
-                  name="genderPreference"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Gender preference</FormLabel>
-                      <FormControl>
-                        <select
-                          {...field}
-                          className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm"
-                        >
-                          <option value="ANY">Any</option>
-                          <option value="MALE">Male</option>
-                          <option value="FEMALE">Female</option>
-                          <option value="OTHER">Other</option>
-                        </select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={roommateForm.control}
-                  name="lifestyleTags"
-                  render={({ field }) => (
-                    <FormItem className="sm:col-span-2">
-                      <FormLabel>Lifestyle tags</FormLabel>
-                      <FormControl>
-                        <Input placeholder="non-smoker, early-riser, clean" {...field} />
-                      </FormControl>
-                      <FormDescription>Comma separated.</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={roommateForm.control}
-                  name="moveInDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Earliest move-in</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex flex-col justify-center gap-3">
-                  <FormField
-                    control={roommateForm.control}
-                    name="isSmoker"
-                    render={({ field }) => (
-                      <FormItem className="flex items-center gap-2 space-y-0">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={(checked) => field.onChange(checked === true)}
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal">I smoke</FormLabel>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={roommateForm.control}
-                    name="hasPets"
-                    render={({ field }) => (
-                      <FormItem className="flex items-center gap-2 space-y-0">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={(checked) => field.onChange(checked === true)}
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal">I have pets</FormLabel>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-              <LoadingButton type="submit" loading={roommateForm.formState.isSubmitting}>
-                <Save aria-hidden /> Save preferences
-              </LoadingButton>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-
-      {/* Password */}
       <Card className="lg:col-span-3">
         <CardHeader>
           <CardTitle>Change password</CardTitle>

@@ -25,3 +25,32 @@
 - The API has no `/contact` (or similar) endpoint. The Contact page form is fully validated
   (RHF + Zod) and hands the message to the visitor's mail client (mailto with pre-filled
   subject/body) instead of faking a submission. See `src/components/contact/contact-form.tsx`.
+
+## 5. Landlord cannot list received applications (2026-10-09)
+- The docs describe `PATCH /applications/:id/approve|reject`, but there is **no endpoint to
+  list applications for a landlord's properties** — `GET /applications/received`,
+  `/applications/property/:id`, `/properties/:id/applications` all return
+  `404 Route not found`. `GET /applications/my-applications` is tenant-scoped only.
+- Workaround: the provider dashboard surfaces viewing requests
+  (`GET /viewing-requests/received`) + tenancies + maintenance instead of an applications
+  inbox. Approve/reject UI is omitted until a received-applications endpoint exists.
+
+## 6. `GET /tenancies` owner list route is missing
+- Docs list `GET /tenancies?page&limit&status` (OWNER) but the deployed API returns
+  `404 Route not found` for `/tenancies` and `/tenancies/` (both with a fresh token).
+- Discovery: `GET /tenancies/:propertyId` **does** work and returns that property's
+  tenancies (`items[]` with `id`, `rentAmount`, `status`, `room`, `application`).
+- Workaround: `/provider/earnings` fans out over `GET /properties/my-properties` →
+  `/tenancies/:propertyId` → `/tenancies/:tenancyId/rent-payments` to build the rent roll.
+
+## 7. Rent-payments response shape is an object, not a list
+- `GET /tenancies/:id/rent-payments` returns `{ history: [...], upcoming: [...] }`
+  (`history` = paid, `upcoming` = dues), verified live. Frontend types this as
+  `RentPaymentsResponse` and merges the two arrays for display.
+
+## 8. Photo upload endpoint requires CLOUDINARY_* env vars
+- `POST /properties/:id/images` accepts multipart field `images` (max 10, ≤5 MB, image/*)
+  per the docs, but notes it "requires CLOUDINARY_* env vars". If the deployed backend is not
+  configured, uploads fail. The Post-a-Listing wizard uploads selected files after creating
+  the property and warns (without blocking) if any upload fails; URL-based images always work.
+

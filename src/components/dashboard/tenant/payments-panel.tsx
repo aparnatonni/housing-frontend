@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { CreditCard, Receipt, Split } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
-import type { BillSplit, Paginated, Payment, RentPayment } from "@/lib/types";
+import type { BillSplit, Paginated, Payment, RentPayment, RentPaymentsResponse } from "@/lib/types";
 import { DataTable, LoadingButton, PaginationBar, type Column } from "@/components/data-table";
 import { EmptyState } from "@/components/empty-state";
 import { StatusBadge } from "@/components/status-badge";
@@ -63,8 +63,10 @@ export function RentPaymentsPanel() {
     queryKey: ["rent-payments", tenancy?.id],
     enabled: Boolean(tenancy?.id),
     queryFn: () =>
-      api.get<RentPayment[]>(`/tenancies/${tenancy?.id}/rent-payments`),
+      api.get<RentPaymentsResponse>(`/tenancies/${tenancy?.id}/rent-payments`),
   });
+
+  const rentRows = [...(rentPayments?.upcoming ?? []), ...(rentPayments?.history ?? [])];
 
   const columns: Column<RentPayment>[] = [
     {
@@ -148,7 +150,7 @@ export function RentPaymentsPanel() {
       </div>
       <DataTable
         columns={columns}
-        rows={rentPayments ?? []}
+        rows={rentRows}
         rowKey={(row) => row.id}
         isLoading={isPending}
         empty={

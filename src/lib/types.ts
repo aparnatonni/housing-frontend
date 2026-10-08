@@ -196,6 +196,12 @@ export interface RentPayment {
   period?: string;
 }
 
+/** Shape returned by GET /tenancies/:id/rent-payments. */
+export interface RentPaymentsResponse {
+  history: RentPayment[];
+  upcoming: RentPayment[];
+}
+
 export type PaymentStatus = "PENDING" | "VALID" | "FAILED" | "CANCELLED";
 
 export interface Payment {

@@ -74,12 +74,15 @@ Enums seen: listing `status`: ACTIVE | INACTIVE; room `isAvailable`: bool.
 | PATCH | `/viewing-requests/:id/status` | `{ status }` PENDING→APPROVED/REJECTED/CANCELLED; APPROVED→COMPLETED/CANCELLED |
 | PATCH | `/applications/:id/approve` | creates ACTIVE tenancy, frees room, rejects others |
 | PATCH | `/applications/:id/reject` | |
-| GET | `/tenancies?page&limit&status` | tenancies of own properties |
-| GET | `/tenancies/:id/rent-payments` | history + dues (earnings source) |
+| GET | `/tenancies/:propertyId` | **verified live** — tenancies for one owned property (the documented `GET /tenancies` list is 404 on the deployed API) |
+| GET | `/tenancies/:id/rent-payments` | `{ history: [...], upcoming: [...] }` (object, not array) |
 | POST | `/tenancies/:id/rent-payments/generate` | `{ dueDate }` |
 | POST | `/rent-payments/:id/mark-paid` | offline/cash |
-| GET | `/maintenance-requests/property/:propertyId` | own property requests |
+| GET | `/maintenance-requests/property/:propertyId` | own property requests (bare array) |
 | PATCH | `/maintenance-requests/:id/status` | OPEN→IN_PROGRESS→RESOLVED→CLOSED |
+| POST | `/properties` | create listing (wizard step 1) |
+| POST | `/properties/:id/rooms` | add a room (wizard step 2) |
+| POST | `/properties/:id/images` | multipart field `images` (≤10 files, ≤5 MB) |
 
 ## Payments — SSLCommerz (test mode) — NOT Stripe
 | Method | Path | Notes |
