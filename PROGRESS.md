@@ -20,7 +20,10 @@ Re-read AGENTS.md + this file + API_NOTES.md after any restart, continue at firs
 - [x] Task 9: Payments (SSLCommerz): initiate, /payment/success, /payment/cancel
 - [x] Task 10: Optimistic updates, toasts, error.tsx per route group
 - [x] Task 11: Polish — responsive, a11y, lint + tsc + build zero errors, no `any`
-- [ ] Task 12: Docs — README.md, .env.example, FINAL_REPORT.md
+- [x] Task 12: Docs — README.md, .env.example, FINAL_REPORT.md
+
+## Status: ALL TASKS COMPLETE ✅
+`npm run build` + `npx tsc --noEmit` + `npm run lint` all green. See FINAL_REPORT.md.
 
 ## Definition of done per task
 `npm run build` green → tick box → commit + push → next task.
