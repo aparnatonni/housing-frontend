@@ -37,13 +37,28 @@ export function AdminListings() {
   const setStatus = useMutation({
     mutationFn: ({ id, status }: { id: string; status: ListingStatus }) =>
       api.patch(`/admin/properties/${id}/status`, { status }),
-    onSuccess: (_result, variables) => {
-      toast.success(variables.status === "ACTIVE" ? "Listing activated" : "Listing deactivated");
-      queryClient.invalidateQueries({ queryKey: ["admin-properties"] });
+    onMutate: async ({ id, status }) => {
+      const key = ["admin-properties", query.toString()];
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData<Paginated<PropertySummary>>(key);
+      if (previous) {
+        queryClient.setQueryData<Paginated<PropertySummary>>(key, {
+          ...previous,
+          items: previous.items.map((item) =>
+            item.id === id ? { ...item, status } : item
+          ),
+        });
+      }
+      return { previous, key };
     },
-    onError: (mutationError) => {
+    onError: (mutationError, _variables, context) => {
+      if (context?.previous) queryClient.setQueryData(context.key, context.previous);
       toast.error(mutationError instanceof ApiError ? mutationError.message : "Could not update");
     },
+    onSuccess: (_result, variables) => {
+      toast.success(variables.status === "ACTIVE" ? "Listing activated" : "Listing deactivated");
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ["admin-properties"] }),
   });
 
   const columns: Column<PropertySummary>[] = [
