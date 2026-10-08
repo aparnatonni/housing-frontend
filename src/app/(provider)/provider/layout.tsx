@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { Suspense } from "react";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
+import { PageSkeleton } from "@/components/skeletons";
 
 export const metadata: Metadata = {
   title: { default: "Landlord dashboard", template: "%s · Landlord dashboard · NestMate" },
@@ -10,8 +12,10 @@ export const metadata: Metadata = {
 
 export default function ProviderLayout({ children }: { children: ReactNode }) {
   return (
-    <DashboardShell role="OWNER" title="Landlord dashboard">
-      {children}
-    </DashboardShell>
+    <Suspense fallback={<PageSkeleton />}>
+      <DashboardShell role="OWNER" title="Landlord dashboard">
+        {children}
+      </DashboardShell>
+    </Suspense>
   );
 }
