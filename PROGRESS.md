@@ -12,9 +12,9 @@ Re-read AGENTS.md + this file + API_NOTES.md after any restart, continue at firs
 - [x] Task 1: Foundation — typed API client, types, providers, reusable components, hooks
 - [x] Task 2: Auth — login/register, demo buttons, Zustand store, middleware, logout
 - [x] Task 3: Shared layouts — Navbar/Footer, role sidebars, error/not-found/loading files
-- [ ] Task 4: Public pages (Metadata): Home, About, Services, Contact, Pricing/FAQ
-- [ ] Task 5: Listings browse + detail (URL-driven filters/sort/pagination)
-- [ ] Task 6: Tenant dashboard: /dashboard, /dashboard/profile, /dashboard/payments
+- [x] Task 4: Public pages (Metadata): Home, About, Services, Contact, Pricing/FAQ
+- [x] Task 5: Listings browse + detail (URL-driven filters/sort/pagination)
+- [x] Task 6: Tenant dashboard: /dashboard, /dashboard/profile, /dashboard/payments
 - [ ] Task 7: Landlord dashboard: /provider (listings+requests), Post wizard, earnings, profile
 - [ ] Task 8: Admin dashboard: /admin stats+charts, /admin/manage CRUD, /admin/reports
 - [ ] Task 9: Payments (SSLCommerz): initiate, /payment/success, /payment/cancel
