@@ -202,7 +202,7 @@ export interface RentPaymentsResponse {
   upcoming: RentPayment[];
 }
 
-export type PaymentStatus = "PENDING" | "VALID" | "FAILED" | "CANCELLED";
+export type PaymentStatus = "PENDING" | "SUCCESS" | "VALID" | "FAILED" | "CANCELLED";
 
 export interface Payment {
   id: string;
@@ -214,6 +214,11 @@ export interface Payment {
   purpose: string;
   createdAt: string;
   propertyTitle?: string;
+  payer?: { id: string; name: string; email: string };
+}
+
+export interface AdminUser extends User {
+  createdAt?: string;
 }
 
 export type MaintenanceStatus = "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";

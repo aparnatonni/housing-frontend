@@ -54,3 +54,10 @@
   configured, uploads fail. The Post-a-Listing wizard uploads selected files after creating
   the property and warns (without blocking) if any upload fails; URL-based images always work.
 
+## 9. No admin property-list endpoint (2026-10-09)
+- Admin can `PATCH /admin/properties/:id/status`, but there is **no `GET /admin/properties`**
+  to enumerate listings (including inactive ones). The admin "Listings" tab therefore uses the
+  public `GET /properties` feed (active listings only) with search + pagination, and the UI
+  states this limitation. Action needed: add an admin property list to B7A6.
+
+

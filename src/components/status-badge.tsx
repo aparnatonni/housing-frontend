@@ -13,6 +13,7 @@ const STATUS_TONE: Record<string, keyof typeof TONE_CLASS> = {
   APPROVED: "success",
   PAID: "success",
   VALID: "success",
+  SUCCESS: "success",
   COMPLETED: "success",
   RESOLVED: "success",
   SETTLED: "success",
