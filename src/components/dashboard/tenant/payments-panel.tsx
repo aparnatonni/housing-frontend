@@ -40,9 +40,23 @@ function useInitiatePayment() {
   return useMutation({
     mutationFn: (payload: { type: "RENT" | "BILL"; referenceId: string }) =>
       api.post<InitiateResponse>("/payments/initiate", payload),
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["rent-payments"] });
       if (data.gatewayPageURL) {
+        try {
+          window.sessionStorage.setItem(
+            "hh_last_payment",
+            JSON.stringify({
+              tranId: data.tranId,
+              paymentId: data.paymentId ?? data.id,
+              type: variables.type,
+              purpose: variables.type === "RENT" ? "RENT" : "BILL",
+              initiatedAt: Date.now(),
+            })
+          );
+        } catch {
+          // sessionStorage may be unavailable (private mode); verification still works via the URL.
+        }
         toast.info("Redirecting to secure checkout…");
         window.location.assign(data.gatewayPageURL);
       } else {
