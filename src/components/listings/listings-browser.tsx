@@ -62,7 +62,7 @@ export function ListingsBrowser() {
 
   const queryString = buildQueryString(searchParams);
 
-  const { data, isPending, isError, error, refetch, isFetching } = useQuery({
+  const { data, isPending, isError, error, isFetching } = useQuery({
     queryKey: ["properties", queryString],
     queryFn: () => api.get<Paginated<PropertySummary>>(`/properties?${queryString}`, { auth: false }),
   });

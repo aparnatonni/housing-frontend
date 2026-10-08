@@ -25,13 +25,14 @@ export function SearchInput({
   label = "Search",
 }: SearchInputProps) {
   const [local, setLocal] = React.useState(value);
+  const [prevValue, setPrevValue] = React.useState(value);
   const debounced = useDebounce(local, 350);
 
-  React.useEffect(() => {
+  // Sync when the URL value changes externally (adjust state during render).
+  if (value !== prevValue) {
+    setPrevValue(value);
     setLocal(value);
-    // Sync only when the URL value changes externally.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }
 
   React.useEffect(() => {
     if (debounced !== value) onChange(debounced);

@@ -4,6 +4,8 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 
 type Theme = "light" | "dark";
 
+const THEME_KEY = "housing-theme";
+
 interface ThemeContextValue {
   theme: Theme;
   toggleTheme: () => void;
@@ -14,23 +16,26 @@ const ThemeContext = createContext<ThemeContextValue>({
   toggleTheme: () => undefined,
 });
 
+function readPreferredTheme(): Theme {
+  const stored = window.localStorage.getItem(THEME_KEY);
+  if (stored === "dark" || stored === "light") return stored;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    const stored = window.localStorage.getItem("housing-theme");
-    const preferred =
-      stored === "dark" || stored === "light"
-        ? stored
-        : window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
-    setTheme(preferred);
+    // Capture the stored/system preference now, apply it right after the first
+    // paint so the initial client render stays identical to the server HTML.
+    const preferred = readPreferredTheme();
+    const frame = requestAnimationFrame(() => setTheme(preferred));
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
-    window.localStorage.setItem("housing-theme", theme);
+    window.localStorage.setItem(THEME_KEY, theme);
   }, [theme]);
 
   const toggleTheme = useCallback(

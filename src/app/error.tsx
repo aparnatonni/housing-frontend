@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { AlertTriangle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ApiError } from "@/lib/api";
@@ -16,6 +17,8 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const router = useRouter();
+
   useEffect(() => {
     // Surface unexpected errors in the console for debugging.
     console.error(error);
@@ -42,7 +45,7 @@ export default function GlobalError({
         <Button onClick={reset}>
           <RotateCcw aria-hidden /> Try again
         </Button>
-        <Button variant="outline" onClick={() => window.location.assign("/")}>
+        <Button variant="outline" onClick={() => router.push("/")}>
           Go home
         </Button>
       </div>

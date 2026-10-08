@@ -52,7 +52,7 @@ export function ContactForm() {
       `Name: ${values.name}\nEmail: ${values.email}\nTopic: ${values.topic}\n\n${values.message}`
     );
     const subject = encodeURIComponent(`[NestMate] ${values.topic}`);
-    window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
+    window.location.assign(`mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`);
     toast.success("Opening your email app with the message pre-filled.");
   };
 

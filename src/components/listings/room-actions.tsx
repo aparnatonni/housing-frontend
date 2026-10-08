@@ -29,7 +29,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LoadingButton } from "@/components/data-table";
-import { useAuth } from "@/hooks/use-auth";
 import { api, ApiError } from "@/lib/api";
 import { useAuthStore } from "@/lib/auth-store";
 import type { Room } from "@/lib/types";
