@@ -13,7 +13,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       <Suspense fallback={<NavbarFallback />}>
         <Navbar />
       </Suspense>
-      <main className="flex-1">{children}</main>
+      <main id="main-content" className="flex-1">{children}</main>
       <Footer />
     </div>
   );

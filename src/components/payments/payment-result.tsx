@@ -59,7 +59,10 @@ export function PaymentResult({ outcome }: { outcome: "success" | "cancel" }) {
   const isSuccess = outcome === "success";
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col items-center justify-center gap-6 px-4 py-16">
+    <main
+      id="main-content"
+      className="mx-auto flex min-h-dvh w-full max-w-xl flex-col items-center justify-center gap-6 px-4 py-16"
+    >
       <span
         className={
           isSuccess
@@ -160,6 +163,6 @@ export function PaymentResult({ outcome }: { outcome: "success" | "cancel" }) {
           </Button>
         ) : null}
       </div>
-    </div>
+    </main>
   );
 }

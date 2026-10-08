@@ -17,7 +17,10 @@ export function AuthShell({
   className?: string;
 }) {
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center bg-muted/40 px-4 py-10">
+    <main
+      id="main-content"
+      className="flex min-h-dvh flex-col items-center justify-center bg-muted/40 px-4 py-10"
+    >
       <div className={cn("w-full max-w-md", className)}>
         <Link
           href="/"
@@ -35,6 +38,6 @@ export function AuthShell({
         </div>
         {footer ? <div className="mt-4 text-center text-sm text-muted-foreground">{footer}</div> : null}
       </div>
-    </div>
+    </main>
   );
 }

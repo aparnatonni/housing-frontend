@@ -19,7 +19,7 @@ Re-read AGENTS.md + this file + API_NOTES.md after any restart, continue at firs
 - [x] Task 8: Admin dashboard: /admin stats+charts, /admin/manage CRUD, /admin/reports
 - [x] Task 9: Payments (SSLCommerz): initiate, /payment/success, /payment/cancel
 - [x] Task 10: Optimistic updates, toasts, error.tsx per route group
-- [ ] Task 11: Polish — responsive, a11y, lint + tsc + build zero errors, no `any`
+- [x] Task 11: Polish — responsive, a11y, lint + tsc + build zero errors, no `any`
 - [ ] Task 12: Docs — README.md, .env.example, FINAL_REPORT.md
 
 ## Definition of done per task
