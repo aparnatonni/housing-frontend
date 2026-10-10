@@ -15,7 +15,12 @@ import { useMyTenancy } from "@/components/dashboard/tenant/tenant-data";
 
 interface InitiateResponse {
   gatewayPageURL?: string;
-  tranId?: string;
+  sessionKey?: string;
+  payment?: {
+    id?: string;
+    gatewayTransactionId?: string | null;
+    amount?: number;
+  };
   [key: string]: unknown;
 }
 
@@ -42,13 +47,15 @@ function useInitiatePayment() {
       api.post<InitiateResponse>("/payments/initiate", payload),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["rent-payments"] });
+      queryClient.invalidateQueries({ queryKey: ["bill-splits"] });
       if (data.gatewayPageURL) {
         try {
           window.sessionStorage.setItem(
             "hh_last_payment",
             JSON.stringify({
-              tranId: data.tranId,
-              paymentId: data.paymentId ?? data.id,
+              tranId: data.payment?.gatewayTransactionId ?? data.tranId,
+              paymentId: data.payment?.id ?? data.paymentId ?? data.id,
+              amount: data.payment?.amount,
               type: variables.type,
               purpose: variables.type === "RENT" ? "RENT" : "BILL",
               initiatedAt: Date.now(),
