@@ -15,8 +15,8 @@ export const metadata: Metadata = {
 
 export default function ListingsPage() {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-10">
-      <div className="mb-6">
+    <div className="mx-auto w-full max-w-6xl px-4 pt-16 pb-10">
+      <div className="mb-6 scroll-mt-24">
         <h1 className="font-heading text-3xl font-semibold tracking-tight">Browse listings</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Live availability from the NestMate API — filters and pagination are reflected in the

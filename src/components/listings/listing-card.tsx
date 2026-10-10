@@ -4,8 +4,7 @@ import { SafeImage } from "@/components/safe-image";
 import { Badge } from "@/components/ui/badge";
 import type { PropertySummary } from "@/lib/types";
 
-function formatPrice(value: number | null): string {
-  if (value === null) return "Ask for price";
+function formatPrice(value: number): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -14,6 +13,7 @@ function formatPrice(value: number | null): string {
 }
 
 export function ListingCard({ property }: { property: PropertySummary }) {
+  const hasRooms = property.roomCount > 0 && property.minRent !== null;
   return (
     <Link
       href={`/listings/${property.id}`}
@@ -36,12 +36,16 @@ export function ListingCard({ property }: { property: PropertySummary }) {
           <h3 className="font-heading text-base font-semibold leading-snug group-hover:text-primary">
             {property.title}
           </h3>
-          <p className="shrink-0 font-heading text-base font-semibold text-primary">
-            {formatPrice(property.minRent)}
-            {property.minRent !== null ? (
+          {hasRooms ? (
+            <p className="shrink-0 font-heading text-base font-semibold text-primary">
+              {formatPrice(property.minRent!)}
               <span className="text-xs font-normal text-muted-foreground">/mo</span>
-            ) : null}
-          </p>
+            </p>
+          ) : (
+            <p className="shrink-0 text-xs font-medium text-muted-foreground">
+              No rooms available yet
+            </p>
+          )}
         </div>
         <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
           <MapPin className="size-3.5 shrink-0" aria-hidden />
