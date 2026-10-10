@@ -250,15 +250,28 @@ export interface BillSplit {
 }
 
 export interface AdminDashboardStats {
-  totalUsers?: number;
-  totalProperties?: number;
-  totalBookings?: number;
-  totalRevenue?: number;
-  users?: number;
-  properties?: number;
-  payments?: number;
-  tenancies?: number;
-  [key: string]: number | undefined;
+  users: { total: number; byRole: Record<Role, number> };
+  properties: { total: number; active: number; inactive: number };
+  rooms: { total: number; available: number };
+  tenancies: { total: number; active: number };
+  applications: { pending: number };
+  viewingRequests: { pending: number };
+  maintenanceRequests: {
+    total: number;
+    open: number;
+    inProgress: number;
+    closed: number;
+  };
+  payments: {
+    totalThisMonth: number;
+    amountThisMonth: number;
+    successfulThisMonth: number;
+    successfulAmountThisMonth: number;
+    totalSuccessful: number;
+    totalSuccessfulAmount: number;
+  };
+  rentPayments: { pending: number; overdue: number };
+  billSplits: { pending: number };
 }
 
 export interface AuditLog {

@@ -46,7 +46,7 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const next = searchParams.get("next");
-  const { login, homeFor } = useAuth();
+  const { login, loginMutation, homeFor } = useAuth();
 
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
@@ -104,7 +104,7 @@ export function LoginForm() {
                   <Input
                     type="password"
                     autoComplete="current-password"
-                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                    placeholder="••••••••"
                     {...field}
                   />
                 </FormControl>
@@ -137,6 +137,7 @@ export function LoginForm() {
               type="button"
               variant="outline"
               className="h-auto justify-start gap-3 px-3 py-2.5 text-left"
+              disabled={loginMutation.isPending}
               onClick={() => demoLogin(account)}
             >
               <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">

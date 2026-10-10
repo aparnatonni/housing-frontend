@@ -62,7 +62,7 @@ export function AdminReports() {
     const buckets = new Map<string, number>();
     for (const payment of payments?.items ?? []) {
       const key = payment.gateway || "OTHER";
-      buckets.set(key, (buckets.get(key) ?? 0) + payment.amount);
+      buckets.set(key, (buckets.get(key) ?? 0) + (payment.amount ?? 0));
     }
     return Array.from(buckets.entries()).map(([name, value]) => ({ name, value }));
   }, [payments]);
