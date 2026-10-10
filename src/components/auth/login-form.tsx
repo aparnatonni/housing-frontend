@@ -24,7 +24,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { ApiError } from "@/lib/api";
 import { DEMO_ACCOUNTS } from "@/lib/demo-accounts";
 import type { Role } from "@/lib/types";
-import { cn } from "cn";
 
 const loginSchema = z.object({
   email: z
@@ -137,7 +136,7 @@ export function LoginForm() {
               key={account.role}
               type="button"
               variant="outline"
-              className={cn("h-auto justify-start gap-3 px-3 py-2.5 text-left", account.todo && "opacity-90")}
+              className="h-auto justify-start gap-3 px-3 py-2.5 text-left"
               onClick={() => demoLogin(account)}
             >
               <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">

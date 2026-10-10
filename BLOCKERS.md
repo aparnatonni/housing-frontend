@@ -1,14 +1,16 @@
 # BLOCKERS
 
-## 1. Admin demo credentials missing (2026-10-08)
-- Postman docs list demo logins `admin@housing.com` / `Password123!` but the live API
-  returns `401 Invalid email or password` (also tried Admin123!, admin123, Password123).
-- `owner1@housing.com` and `tenant1@housing.com` / `Password123!` work fine.
-- Tried: register with role ADMIN is not allowed (only TENANT | OWNER).
-- Workaround: `src/lib/demo-accounts.ts` carries a clearly-marked TODO placeholder for the
-  admin login; Demo Login button for Admin calls the real `/auth/login` endpoint with those
-  credentials and surfaces the API error via Sonner if they are still invalid.
-- Action needed from owner: create an ADMIN user in the backend (B7A6) or send credentials.
+## 1. RESOLVED — Demo credentials now live (2026-10-09)
+- The backend now ships working demo accounts verified against the live API:
+  - `admin@nestmate.com` / `Demo@12345` → **ADMIN** ✔
+  - `tenant@nestmate.com` / `Demo@12345` → **TENANT** ✔
+  - `landlord@nestmate.com` / `Demo@12345` → **OWNER** ✔
+- All three Demo Login buttons on `/login` call the real `/auth/login` endpoint, return valid
+  tokens and `/auth/me` confirms the roles above; role-based redirects send each account to
+  `/admin`, `/dashboard` and `/provider` respectively.
+- Backend role enum is `TENANT | OWNER | ADMIN` (landlord = `OWNER`). The frontend uses
+  `OWNER` consistently across types, middleware, sidebar nav and redirects.
+- Previously `admin@housing.com` returned `401`; that placeholder is gone.
 
 ## 2. Property seed images point at example.com
 - Seed data uses `https://example.com/*.jpg` (not real files), so listing cards show broken

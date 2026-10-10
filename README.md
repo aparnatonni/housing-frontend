@@ -52,9 +52,12 @@ endpoint — nothing is faked.
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Tenant | `tenant1@housing.com` | `Password123!` |
-| Landlord | `owner1@housing.com` | `Password123!` |
-| Admin | `admin@housing.com` | `Password123!` (see `BLOCKERS.md` #1 — backend currently returns 401) |
+| Tenant | `tenant@nestmate.com` | `Demo@12345` |
+| Landlord | `landlord@nestmate.com` | `Demo@12345` |
+| Admin | `admin@nestmate.com` | `Demo@12345` |
+
+Backend role enum is `TENANT | OWNER | ADMIN` (landlord = `OWNER`). The frontend maps all
+role handling — types, middleware, sidebars and redirects — to `OWNER`.
 
 ## Features
 

@@ -31,10 +31,11 @@ Validation errors: HTTP 400 with `errors` map (Zod, e.g. `{"email":["Invalid inp
 | PATCH | `/users/change-password` | `{ currentPassword, newPassword }` |
 | GET | `/users/:id` | public profile |
 
-### Demo accounts (live, verified 2026-10-08)
-- `tenant1@housing.com` / `Password123!` → TENANT (Carol Tenant) ✔
-- `owner1@housing.com` / `Password123!` → OWNER (Alice Owner) ✔
-- `admin@housing.com` / `Password123!` → 401 (not created yet — see BLOCKERS.md)
+### Demo accounts (live, verified 2026-10-09)
+- `tenant@nestmate.com` / `Demo@12345` → TENANT ✔
+- `landlord@nestmate.com` / `Demo@12345` → OWNER (landlord) ✔
+- `admin@nestmate.com` / `Demo@12345` → ADMIN ✔
+- Login + `GET /auth/me` (Bearer) verified for all three; role enum is `TENANT | OWNER | ADMIN`.
 
 ## Properties (listings)
 | Method | Path | Notes |

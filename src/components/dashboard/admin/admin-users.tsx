@@ -89,11 +89,7 @@ export function AdminUsers() {
     {
       key: "role",
       header: "Role",
-      cell: (row) => (
-        <Badge variant="secondary">
-          {row.role === "OWNER" ? "LANDLORD" : row.role}
-        </Badge>
-      ),
+      cell: (row) => <Badge variant="secondary">{row.role}</Badge>,
     },
     {
       key: "auth",

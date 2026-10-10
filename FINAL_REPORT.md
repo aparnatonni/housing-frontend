@@ -80,8 +80,11 @@ git-ignored and never committed.
 
 See `BLOCKERS.md` for full detail. Highlights:
 
-1. **Admin demo login returns 401** — no working admin credentials were provided; the Admin
-   demo button calls the real endpoint so it self-heals once an admin user exists.
+1. **RESOLVED — Demo credentials live now** — `admin@nestmate.com`, `tenant@nestmate.com`
+   and `landlord@nestmate.com` (all `Demo@12345`) return valid tokens; the previous
+   `admin@housing.com` 401 is gone. Roles verified: `ADMIN`, `TENANT`, `OWNER`. The frontend
+   treats the landlord role as `OWNER` everywhere (types, middleware, sidebars, redirects to
+   `/provider`).
 2. **No landlord "received applications" list endpoint** — provider dashboard surfaces viewing
    requests + tenancies instead; approve/reject UI omitted.
 3. **`GET /tenancies` (owner list) is 404** — earnings fans out via `/tenancies/:propertyId`.
