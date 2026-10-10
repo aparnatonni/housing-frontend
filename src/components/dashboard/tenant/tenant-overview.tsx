@@ -12,6 +12,7 @@ import {
   MyApplications,
   MyMaintenance,
   MyViewingRequests,
+  useMyTenancy,
 } from "@/components/dashboard/tenant/tenant-data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -71,6 +72,9 @@ export function TenantOverview() {
   const pendingViewings =
     viewings?.items.filter((item) => item.status === "PENDING").length ?? 0;
 
+  const { data: tenancy } = useMyTenancy();
+  const tenancyTitle = tenancy ? tenancy.room?.property.title : null;
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -92,7 +96,12 @@ export function TenantOverview() {
           hint={`${pendingViewings} awaiting reply`}
           icon={CalendarCheck}
         />
-        <StatCard label="Active tenancy" value="See below" hint="Your current home" icon={Home} />
+        <StatCard
+          label="Active tenancy"
+          value={tenancyTitle ?? "None"}
+          hint="Your current home"
+          icon={Home}
+        />
       </div>
 
       <ActiveTenancyCard />

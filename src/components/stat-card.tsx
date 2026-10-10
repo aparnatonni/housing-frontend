@@ -18,7 +18,9 @@ export function StatCard({ label, value, hint, icon: Icon, className }: StatCard
           <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
             {label}
           </p>
-          <p className="mt-1 font-heading text-2xl font-semibold tracking-tight">{value}</p>
+          <p className="mt-1 truncate font-heading text-2xl font-semibold tracking-tight" title={typeof value === "string" ? value : undefined}>
+            {value}
+          </p>
           {hint ? <p className="mt-1 text-xs text-muted-foreground">{hint}</p> : null}
         </div>
         {Icon ? (

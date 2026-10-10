@@ -74,13 +74,13 @@ export function AdminOverview() {
         <StatCard
           label="Properties"
           value={properties.total ?? 0}
-          hint={plural(properties.active ?? 0, "active")}
+          hint={`${properties.active ?? 0} active`}
           icon={Building2}
         />
         <StatCard
           label="Payments"
           value={payments.totalSuccessful ?? 0}
-          hint={plural(payments.totalThisMonth ?? 0, "this month")}
+          hint={`${payments.totalThisMonth ?? 0} this month`}
           icon={CreditCard}
         />
         <StatCard
@@ -92,11 +92,15 @@ export function AdminOverview() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Rooms" value={rooms} hint={`${plural(data?.rooms?.available ?? 0, "available")}`} />
+        <StatCard
+          label="Rooms"
+          value={rooms}
+          hint={`${data?.rooms?.available ?? 0} available`}
+        />
         <StatCard
           label="Tenancies"
           value={tenancies.total ?? 0}
-          hint={plural(tenancies.active ?? 0, "active")}
+          hint={`${tenancies.active ?? 0} active`}
           icon={DoorOpen}
         />
         <StatCard
