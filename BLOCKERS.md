@@ -62,4 +62,34 @@
   public `GET /properties` feed (active listings only) with search + pagination, and the UI
   states this limitation. Action needed: add an admin property list to B7A6.
 
+## 10. E2E flow verified live 2026-10-10 (demo tenant → test owner → gateway)
+- Ran the full tenant→landlord→payment flow against the live API with the demo tenant and a
+  throwaway owner (`flowtest.owner@nestmate.com`, property "Flow Test Flats", room 401).
+  Every step succeeded and returned the documented shape:
+  1. `POST /applications { roomId, moveInDate, note }` → application id.
+  2. `PATCH /applications/:id/approve` → creates an **ACTIVE tenancy** (confirmed via
+     `GET /tenancies/:propertyId`), frees the room. Re-approving returns
+     `400 "Application has already been processed"`.
+  3. `POST /tenancies/:id/rent-payments/generate { dueDate }` → PENDING invoice in
+     `{ history: [], upcoming: [...] }`.
+  4. `POST /payments/initiate { type: "RENT", referenceId: <rentPaymentId> }` →
+     `gatewayPageURL` (real sandbox.sslcommerz.com checkout) + `payment { id, amount,
+     currency: "BDT", purpose: "RENT" }`.
+  5. `POST /bill-splits { tenancyId, billType, totalAmount, dueDate, ratio: [n] }` then
+     `POST /payments/initiate { type: "BILL", referenceId: <splitId> }` → `gatewayPageURL`
+     (amount 150 BDT). Validation requires `billType` ∈ ELECTRICITY|WATER|GAS|INTERNET|OTHER
+     and `ratio` as an **array** (a bare number 400s).
+  6. `GET /payments/:id` returns the payment to the payer — the `/payment/success` page's
+     verification path works.
+- **Frontend bug found & fixed**: `useInitiatePayment` stored `data.tranId`/`data.paymentId`
+  in sessionStorage, but the API nests them under `data.payment.{ id, gatewayTransactionId }`.
+  The stored record had `undefined` ids, so `/payment/success` could not auto-verify the
+  transaction. Now stores `payment.id`.
+- Notes: the two endpoint calls above (approve, generate, initiate) occasionally take 60–120 s
+  before responding (gateway round-trip on Render free tier) — not a frontend issue, but
+  buttons stay in a loading state meanwhile. The demo tenant's pre-existing APPROVED seed
+  application on "Sunrise Apartments" (room SINGLE, `isAvailable: false`) has `tenancy: null`
+  — the approve→tenancy code path works (we proved it), so that is seed-data drift, and the
+  tenant's `GET /tenancies/my-tenancy` (404) + no payments remain the correct UI empty states.
+
 

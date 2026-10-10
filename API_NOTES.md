@@ -88,7 +88,7 @@ Enums seen: listing `status`: ACTIVE | INACTIVE; room `isAvailable`: bool.
 ## Payments — SSLCommerz (test mode) — NOT Stripe
 | Method | Path | Notes |
 |---|---|---|
-| POST | `/payments/initiate` | TENANT. `{ type: "RENT"\|"BILL", referenceId }` → returns `gatewayPageURL` (redirect browser). 409 if in-flight |
+| POST | `/payments/initiate` | TENANT. `{ type: "RENT"\|"BILL", referenceId }` → `{ payment: { id, amount, currency, purpose, gatewayTransactionId }, gatewayPageURL, sessionKey }` (gatewayPageURL is top-level; the Payment id is nested under `payment.id`). 409 if in-flight |
 | GET | `/payments/success?val_id&tran_id` | backend callback, re-validates with gateway |
 | GET | `/payments/fail?tran_id` | marks FAILED |
 | GET | `/payments/cancel?tran_id` | marks FAILED (cancelled) |
@@ -116,3 +116,8 @@ Enums seen: listing `status`: ACTIVE | INACTIVE; room `isAvailable`: bool.
 - Earnings page = sum of own tenancies' rent payments (no dedicated earnings endpoint).
 - Reports page = admin audit logs + platform payments.
 - No favourites/roommate-matching endpoints exist (see BLOCKERS.md).
+- E2E flow (apply → approve → rent invoice → SSLCommerz initiate) verified live 2026-10-10;
+  `POST /payments/initiate` returns the SDK's full session object inside
+  `payment.metadata.sslcommerz` plus a top-level `gatewayPageURL`. `GET /payments/:id`
+  confirms status to the payer. Bill-split payments use `billSplitId` as `referenceId` with
+  `type: "BILL"`.
